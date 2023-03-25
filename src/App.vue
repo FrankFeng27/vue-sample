@@ -1,17 +1,40 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from "vue";
+import HelloWorld from './components/HelloWorld.vue';
+import LibraryTreeItem from "./components/LibraryTreeItem.vue";
+
+const lib = ref({
+  name: "root",
+  children: [{
+    name: "lib 1",
+    children: [{
+      name: "lib 1.1",
+      children: [{
+        name: "lib 1.1.1",
+        children: [{
+          name: "lib 1.1.1.1"
+        }]
+      }]
+    }]
+  }, {
+    name: "lib 2"
+  }]
+});
+const defaultTab = ref(true);
+function toggle () {
+  defaultTab.value = !defaultTab.value;
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="container px-4 flex">
+    <div class="grow-0">
+      <LibraryTreeItem :lib="lib" :level="0" />
+    </div>
+    <div class="grow">
+      <HelloWorld v-if="defaultTab" msg="Vite + Vue" />
+    </div>    
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <style scoped>
