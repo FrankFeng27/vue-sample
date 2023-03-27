@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { propsToAttrMap } from "@vue/shared";
 import { ref, computed } from "vue";
 import { LibraryItem } from "../data/datatypes";
+import { isLibraryItemsEqualed } from "../data/data_utils";
 
-const props = defineProps< {lib: LibraryItem, level?: number}>();
+import downArrowSvg from "../assets/down-arrow.svg";
+import rightArrowSvg from "../assets/right-arrow.svg"
 
+const props = defineProps< {
+  lib: LibraryItem, 
+  level?: number,
+  curLib?: LibraryItem
+  onSelect?: (lib: LibraryItem) => void;
+}>();
+
+const isCurrentLib = ref(props.curLib ? isLibraryItemsEqualed(props.lib, props.curLib) : false);
 const itemLevel = ref(props.level??0);
 const isOpen = ref(false);
 const isFolder = computed(() => {
@@ -13,9 +22,6 @@ const isFolder = computed(() => {
 const indentMax = 9;
 const indentIndex = itemLevel.value > indentMax ? indentMax : itemLevel.value;
 const indentClass:string = `indent${indentIndex}`;
-
-const downArrowSvg = "/down-arrow.svg";
-const rightArrowSvg = "/right-arrow.svg";
 
 function toggleExpand() {
   isOpen.value = !isOpen.value;
@@ -28,6 +34,11 @@ function addChild() {
   (props.lib.children = [newItem]) : 
   props.lib.children.push(newItem);
 }
+function onLibSelected() {
+  if (props.onSelect) {
+    props.onSelect(props.lib);
+  }
+}
 
 </script>
 
@@ -35,14 +46,18 @@ function addChild() {
   <div class="treeItem" >
     <div :class="indentClass"
       class="flex flex-row"
-      @click="toggleExpand"
+      v-bind:class="{'bg-skin-treeItemFocus': isCurrentLib}"
+      @click="onLibSelected"
       @dblclick="addChild">
-      <div v-if="isFolder" class="grow-0">
-        <img src="/down-arrow.svg" >
+      <div v-if="isFolder" class="grow-0" @click.stop="toggleExpand">
+        <img :src="isOpen ? downArrowSvg : rightArrowSvg" alt="collapsed" width="22" height="22">
       </div>
-      <div class="grow flex flex-row">
+      <div class="grow flex flex-row px-3">
         <p class="grow">{{ lib.name }}</p>
-        <span class="grow-0" v-if="isFolder">[{{ isOpen ? " - " : "+" }}]</span>
+        <div class="grow-0 flex flex-row" v-if="isFolder">
+          <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1">+</div>
+          <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1">-</div>
+        </div>
       </div>
     </div>
     <ul 
@@ -52,7 +67,10 @@ function addChild() {
        class="item"
        v-for="child in lib.children"
        :lib="child"
-       :level="itemLevel+1"></LibraryTreeItem>
+       :level="itemLevel+1"
+       :curLib="curLib"
+       :onSelect="onSelect"
+      ></LibraryTreeItem>
     </ul>
   </div>
 </template>

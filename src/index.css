@@ -2,3 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+:root {
+    --color-toolbtn-bgcolor: #e2e8f0;
+    --color-toolbtn-bghover: #cbd5e0;
+    --color-toolbtn-color: #000;
+    --color-treeitem-focus-bgcolor: #cbd5e0;
+  }
+}

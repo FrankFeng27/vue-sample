@@ -6,6 +6,7 @@ import styled, { ThemeProvider } from "vue3-styled-components";
 import { theme } from "./theme/theme"
 import HelloWorld from './components/HelloWorld.vue';
 import LibraryTreeItem from "./components/LibraryTreeItem.vue";
+import { LibraryItem } from "./data/datatypes";
 
 const StyledContainer = styled.div`
   background-color: ${props => props.theme.theme.colors.libraryBack};
@@ -23,7 +24,9 @@ const lib = ref({
       children: [{
         name: "lib 1.1.1",
         children: [{
-          name: "lib 1.1.1.1"
+          id: "1",
+          name: "lib 1.1.1.1",
+          content: "test"
         }]
       }]
     }]
@@ -31,9 +34,14 @@ const lib = ref({
     name: "lib 2"
   }]
 });
+const curLib = ref<LibraryItem | undefined>(undefined);
 const defaultTab = ref(true);
 function toggle () {
   defaultTab.value = !defaultTab.value;
+}
+function onSelect(lib: LibraryItem) {
+  console.log(lib);
+  curLib.value = lib;
 }
 </script>
 
@@ -41,7 +49,7 @@ function toggle () {
   <ThemeProvider :theme={theme}>
   <div class="container px-4 flex">
     <StyledContainer class="grow-0">
-      <LibraryTreeItem class="item" :lib="lib" :level="0" />
+      <LibraryTreeItem class="item" :lib="lib" :level="0" :on-select="onSelect" />
     </StyledContainer>
     <div class="grow">
       <HelloWorld v-if="defaultTab" msg="Vite + Vue" />
