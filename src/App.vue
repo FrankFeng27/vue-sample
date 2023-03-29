@@ -5,7 +5,8 @@ import { ref } from "vue";
 import styled, { ThemeProvider } from "vue3-styled-components";
 import { theme } from "./theme/theme"
 import HelloWorld from './components/HelloWorld.vue';
-import LibraryTreeItem from "./components/LibraryTreeItem.vue";
+// import LibraryTreeItem from "./components/LibraryTreeItem.vue";
+import TreeItem from "./components/tree-item.vue";
 import { LibraryItem } from "./data/datatypes";
 
 const StyledContainer = styled.div`
@@ -15,25 +16,28 @@ const StyledContainer = styled.div`
   padding: 5px 10px;
 `;
 
-const lib = ref({
-  name: "root",
-  children: [{
-    name: "lib 1",
-    children: [{
-      name: "lib 1.1",
-      children: [{
-        name: "lib 1.1.1",
-        children: [{
-          id: "1",
-          name: "lib 1.1.1.1",
-          content: "test"
-        }]
-      }]
-    }]
-  }, {
-    name: "lib 2"
-  }]
-});
+const treeData = ref({
+  name: 'My Tree',
+  children: [
+    { name: 'hello' },
+    { name: 'world' },
+    {
+      name: 'child folder',
+      children: [
+        {
+          name: 'child folder',
+          children: [{ name: 'hello' }, { name: 'world' }]
+        },
+        { name: 'hello' },
+        { name: 'world' },
+        {
+          name: 'child folder',
+          children: [{ name: 'hello' }, { name: 'world' }]
+        }
+      ]
+    }
+  ]
+})
 const curLib = ref<LibraryItem | undefined>(undefined);
 const defaultTab = ref(true);
 function toggle () {
@@ -50,7 +54,7 @@ function onSelect(lib: LibraryItem) {
   <div>{{curLib ? curLib.name : "null"}}</div>
   <div class="container px-4 flex">
     <StyledContainer class="grow-0">
-      <LibraryTreeItem class="item" :lib="lib" :curlib="curLib" :level="0" :on-select="onSelect" />
+      <TreeItem :model="treeData" class="item"/>
     </StyledContainer>
     <div class="grow">
       <HelloWorld v-if="defaultTab" msg="Vite + Vue" />
@@ -71,5 +75,12 @@ function onSelect(lib: LibraryItem) {
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.item {
+  cursor: pointer;
+  line-height: 1.5;
+}
+.bold {
+  font-weight: bold;
 }
 </style>
