@@ -47,9 +47,10 @@ function onSelect(lib: LibraryItem) {
 
 <template>
   <ThemeProvider :theme={theme}>
+  <div>{{curLib ? curLib.name : "null"}}</div>
   <div class="container px-4 flex">
     <StyledContainer class="grow-0">
-      <LibraryTreeItem class="item" :lib="lib" :level="0" :on-select="onSelect" />
+      <LibraryTreeItem class="item" :lib="lib" :curlib="curLib" :level="0" :on-select="onSelect" />
     </StyledContainer>
     <div class="grow">
       <HelloWorld v-if="defaultTab" msg="Vite + Vue" />

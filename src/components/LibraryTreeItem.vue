@@ -9,11 +9,11 @@ import rightArrowSvg from "../assets/right-arrow.svg"
 const props = defineProps< {
   lib: LibraryItem, 
   level?: number,
-  curLib?: LibraryItem
+  curlib?: LibraryItem
   onSelect?: (lib: LibraryItem) => void;
 }>();
 
-const isCurrentLib = ref(props.curLib ? isLibraryItemsEqualed(props.lib, props.curLib) : false);
+const isCurrentLib = ref(props.curlib ? isLibraryItemsEqualed(props.lib, props.curlib) : false);
 const itemLevel = ref(props.level??0);
 const isOpen = ref(false);
 const isFolder = computed(() => {
@@ -55,7 +55,7 @@ function onLibSelected() {
       <div class="grow flex flex-row px-3">
         <p class="grow">{{ lib.name }}</p>
         <div class="grow-0 flex flex-row" v-if="isFolder">
-          <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1">+</div>
+          <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1" @click="addChild">+</div>
           <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1">-</div>
         </div>
       </div>
@@ -68,7 +68,7 @@ function onLibSelected() {
        v-for="child in lib.children"
        :lib="child"
        :level="itemLevel+1"
-       :curLib="curLib"
+       :curlib="curlib"
        :onSelect="onSelect"
       ></LibraryTreeItem>
     </ul>
