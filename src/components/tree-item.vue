@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
+import { TreeItemData } from '../data/datatypes';
 
-const props = defineProps({
-  model: Object,
-  level: Number
-})
+const props = defineProps<{
+  model: TreeItemData;
+  level?: number;
+  cur?: TreeItemData;
+  onSelected: (node: TreeItemData) => void;
+}>();
 
-const isOpen = ref(false)
-const cur = ref(undefined);
+const isOpen = ref(false);
 const itemLevel = props.level??0;
 const indentMax = 9;
 const indentIndex = itemLevel > indentMax ? indentMax : itemLevel;
@@ -17,9 +19,13 @@ const indentClass1 = `indent${indentIndex1}`;
 const isFolder = computed(() => {
   return props.model!.children && props.model!.children.length
 });
-const isCurrent = computed(() => {
-  return cur !== undefined ? cur.value === props.model!.name : false;
-});
+
+const isCurrent = computed(() => (
+  props.cur !== undefined && props.cur === props.model
+));
+
+
+
 
 function toggle() {
   isOpen.value = !isOpen.value
@@ -34,21 +40,24 @@ function changeType() {
 }
 
 function addChild() {
-  props.model!.children.push({ name: 'new stuff' })
+  props.model!.children ? 
+  props.model.children.push({ name: 'new stuff' }) : 
+  (props.model.children = [{name: 'new stuff'}]);
 }
-function onSelect() {
-  cur.value = props.model!.name;
+function onItemSelected() {
+  props.onSelected(props.model);
 }
+
 </script>
 
 <template>
   <li>
     <div
-      :class="indentClass"    
-      @click="onSelect"  
+      :class="indentClass"  
+      @click="onItemSelected()"
       @dblclick="changeType">
-      <div v-bind:class="{'bold': isCurrent}">
-        {{ model!.name }}
+      <div :class="{'bold': isCurrent}">
+        {{ props.model!.name }}
         <span v-if="isFolder" @click="toggle">[{{ isOpen ? '-' : '+' }}]</span>
       </div>
     </div>
@@ -59,9 +68,11 @@ function onSelect() {
       -->
       <TreeItem
         class="item"
-        v-for="m in model!.children"
+        v-for="m in props.model!.children"
         :level="itemLevel+1"
-        :model="m">
+        :model="m"
+        :onSelected="props.onSelected"
+      >
       </TreeItem>
       <li @click="addChild"><div :class="indentClass1">+</div></li>
     </ul>

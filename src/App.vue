@@ -7,7 +7,7 @@ import { theme } from "./theme/theme"
 import HelloWorld from './components/HelloWorld.vue';
 // import LibraryTreeItem from "./components/LibraryTreeItem.vue";
 import TreeItem from "./components/tree-item.vue";
-import { LibraryItem } from "./data/datatypes";
+import LibraryTree from "./components/LibraryTree.vue"
 
 const StyledContainer = styled.div`
   background-color: ${props => props.theme.theme.colors.libraryBack};
@@ -16,45 +16,15 @@ const StyledContainer = styled.div`
   padding: 5px 10px;
 `;
 
-const treeData = ref({
-  name: 'My Tree',
-  children: [
-    { name: 'hello' },
-    { name: 'world' },
-    {
-      name: 'child folder',
-      children: [
-        {
-          name: 'child folder',
-          children: [{ name: 'hello' }, { name: 'world' }]
-        },
-        { name: 'hello' },
-        { name: 'world' },
-        {
-          name: 'child folder',
-          children: [{ name: 'hello' }, { name: 'world' }]
-        }
-      ]
-    }
-  ]
-})
-const curLib = ref<LibraryItem | undefined>(undefined);
 const defaultTab = ref(true);
-function toggle () {
-  defaultTab.value = !defaultTab.value;
-}
-function onSelect(lib: LibraryItem) {
-  console.log(lib);
-  curLib.value = lib;
-}
+
 </script>
 
 <template>
   <ThemeProvider :theme={theme}>
-  <div>{{curLib ? curLib.name : "null"}}</div>
   <div class="container px-4 flex">
     <StyledContainer class="grow-0">
-      <TreeItem :model="treeData" class="item"/>
+      <LibraryTree />
     </StyledContainer>
     <div class="grow">
       <HelloWorld v-if="defaultTab" msg="Vite + Vue" />
@@ -79,8 +49,5 @@ function onSelect(lib: LibraryItem) {
 .item {
   cursor: pointer;
   line-height: 1.5;
-}
-.bold {
-  font-weight: bold;
 }
 </style>
