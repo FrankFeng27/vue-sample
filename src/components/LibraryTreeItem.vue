@@ -5,15 +5,16 @@ import { isLibraryItemsEqualed } from "../data/data_utils";
 
 import downArrowSvg from "../assets/down-arrow.svg";
 import rightArrowSvg from "../assets/right-arrow.svg"
+import articleSvg from "../assets/article.svg";
 
 const props = defineProps< {
   lib: LibraryItem, 
-  level?: number,
+  level: number,
   curlib?: LibraryItem
-  onSelect?: (lib: LibraryItem) => void;
+  onSelect: (lib: LibraryItem) => void;
 }>();
 
-const isCurrentLib = ref(props.curlib ? isLibraryItemsEqualed(props.lib, props.curlib) : false);
+const isCurrentLib = computed(() => (props.curlib ? isLibraryItemsEqualed(props.lib, props.curlib) : false));
 const itemLevel = ref(props.level??0);
 const isOpen = ref(false);
 const isFolder = computed(() => {
@@ -34,7 +35,7 @@ function addChild() {
   (props.lib.children = [newItem]) : 
   props.lib.children.push(newItem);
 }
-function onLibSelected() {
+function onLibSelect() {
   if (props.onSelect) {
     props.onSelect(props.lib);
   }
@@ -47,13 +48,16 @@ function onLibSelected() {
     <div :class="indentClass"
       class="flex flex-row"
       v-bind:class="{'bg-skin-treeItemFocus': isCurrentLib}"
-      @click="onLibSelected"
+      @click="onLibSelect"
       @dblclick="addChild">
       <div v-if="isFolder" class="grow-0" @click.stop="toggleExpand">
         <img :src="isOpen ? downArrowSvg : rightArrowSvg" alt="collapsed" width="22" height="22">
       </div>
+      <div v-else class="grow-0">
+        <img :src="articleSvg" width="22" height="22" >
+      </div>
       <div class="grow flex flex-row px-3">
-        <p class="grow">{{ lib.name }}</p>
+        <p class="grow">{{ props.lib.name }}</p>
         <div class="grow-0 flex flex-row" v-if="isFolder">
           <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1" @click="addChild">+</div>
           <div class="grow-0 bg-skin-fill text-skin hover:bg-skin-toolbtnHover px-1">-</div>
@@ -65,11 +69,11 @@ function onLibSelected() {
     v-if="isFolder">
       <LibraryTreeItem 
        class="item"
-       v-for="child in lib.children"
+       v-for="child in props.lib.children"
        :lib="child"
        :level="itemLevel+1"
-       :curlib="curlib"
-       :onSelect="onSelect"
+       :curlib="props.curlib"
+       :onSelect="props.onSelect"
       ></LibraryTreeItem>
     </ul>
   </div>

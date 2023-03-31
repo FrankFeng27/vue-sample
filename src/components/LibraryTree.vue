@@ -2,78 +2,43 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import styled from "vue3-styled-components";
-import { TreeItemData } from "../data/datatypes";
-import TreeItem from "./tree-item.vue";
+import { LibraryItem, TreeItemData } from "../data/datatypes";
+/// import TreeItem from "./tree-item.vue";
+import LibraryTreeItem from "./LibraryTreeItem.vue";
 
 const StyledContainer = styled.div`
   flex-grow: 0
 `;
 
-const demoData: Array<TreeItemData> = [{
+const demoData: TreeItemData = {
   name: 'My Tree',
   children: [
     { name: 'hello' },
-    { name: 'world' },
     {
       name: 'child folder',
-      children: [
-        {
-          name: 'child folder',
-          children: [{ name: 'hello' }, { name: 'world' }]
-        },
-        { name: 'hello' },
-        { name: 'world' },
-        {
-          name: 'child folder',
-          children: [{ name: 'hello' }, { name: 'world' }]
-        }
-      ]
     }
   ]
-}, {
-  name: 'My Tree 1',
-  children: [
-    { name: 'hello 1' },
-    { name: 'world 1' },
-    {
-      name: 'child folder 1',
-      children: [
-        {
-          name: 'child folder 1',
-          children: [{ name: 'hello 1' }, { name: 'world 1' }]
-        },
-        { name: 'hello 1' },
-        { name: 'world 1' },
-        {
-          name: 'child folder 1',
-          children: [{ name: 'hello 1' }, { name: 'world 1' }]
-        }
-      ]
-    }
-  ]
-}];
+};
 
-const treeData = ref<TreeItemData>(demoData[0])
+const treeData = ref<TreeItemData>(demoData)
 let index = 0;
 
-const cur = ref<TreeItemData | undefined>(undefined);
-
-function onSelected (node: TreeItemData) {
+const cur = ref<LibraryItem | undefined>(undefined);
+const level = ref(0);
+function onSelect (node: LibraryItem) {
   cur.value = node;
-  treeData.value = {
-    ...demoData[(++index)%2]
-  }
 }
 </script>
 
 <template>
 <StyledContainer>
-  <div>{{ cur ? cur : "undefined" }}</div>
-  <TreeItem 
-    :model="treeData"
+  <div>{{ cur ? cur.name : "undefined" }}</div>
+  <LibraryTreeItem 
+    :lib="treeData"
     class="item" 
-    :cur="cur"
-    :onSelected="onSelected"
+    :curlib="cur"
+    :level="level"
+    :onSelect="onSelect"
   />
   
 </StyledContainer>

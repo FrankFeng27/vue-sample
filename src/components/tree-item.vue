@@ -4,9 +4,9 @@ import { TreeItemData } from '../data/datatypes';
 
 const props = defineProps<{
   model: TreeItemData;
-  level?: number;
-  cur?: TreeItemData;
-  onSelected: (node: TreeItemData) => void;
+  level: number;
+  cur: string;
+  onSelect: (n: string) => void;
 }>();
 
 const isOpen = ref(false);
@@ -20,9 +20,9 @@ const isFolder = computed(() => {
   return props.model!.children && props.model!.children.length
 });
 
-const isCurrent = computed(() => (
-  props.cur !== undefined && props.cur === props.model
-));
+const isCurrent = computed(() => {
+  return props.cur === props.model.name;
+});
 
 
 
@@ -44,8 +44,8 @@ function addChild() {
   props.model.children.push({ name: 'new stuff' }) : 
   (props.model.children = [{name: 'new stuff'}]);
 }
-function onItemSelected() {
-  props.onSelected(props.model);
+function onItemSelect() {
+  props.onSelect(props.model.name);
 }
 
 </script>
@@ -54,7 +54,7 @@ function onItemSelected() {
   <li>
     <div
       :class="indentClass"  
-      @click="onItemSelected()"
+      @click="onItemSelect()"
       @dblclick="changeType">
       <div :class="{'bold': isCurrent}">
         {{ props.model!.name }}
@@ -71,7 +71,8 @@ function onItemSelected() {
         v-for="m in props.model!.children"
         :level="itemLevel+1"
         :model="m"
-        :onSelected="props.onSelected"
+        :onSelect="props.onSelect"
+        :cur="props.cur"
       >
       </TreeItem>
       <li @click="addChild"><div :class="indentClass1">+</div></li>
