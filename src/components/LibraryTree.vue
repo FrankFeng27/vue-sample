@@ -3,7 +3,6 @@
 import { ref } from "vue";
 import styled from "vue3-styled-components";
 import { LibraryItem, TreeItemData } from "../data/datatypes";
-/// import TreeItem from "./tree-item.vue";
 import LibraryTreeItem from "./LibraryTreeItem.vue";
 
 const StyledContainer = styled.div`

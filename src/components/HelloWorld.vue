@@ -1,34 +1,37 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import Editor from '@tinymce/tinymce-vue'
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+const content = ref("This is Quill Editor.");
+function onContentChange(event: any, editor: any) {
+  console.log('content changed');
+  const content = editor.getContent();
+  console.log(content);
+}
+
+
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
   <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+    <input value="msg" />
+    <Editor
+      api-key="no-api-key"
+      :init="{
+        plugins: 'lists link image table code help wordcount',
+        toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | table | media | link | fullscreen',
+        menubar: false,
+        setup: (editor: any) => {
+          editor.on('Change', (e:any) => (onContentChange(e, editor)));
+        }
+      }"
+    />
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
 <style scoped>

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^5",
     "vue": "^3.2.47",
     "vue3-styled-components": "^1.2.1"
   },

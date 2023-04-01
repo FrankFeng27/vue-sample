@@ -5,7 +5,7 @@ export const theme = {
       success: '#28a745',
       danger: '#dc3545',
       warning: '#ffc107',
-      libraryBack: "#fbfbfa",
+      libraryBack: "#e5e5e5",
     },
     fonts: {
       body: 'Arial, sans-serif',

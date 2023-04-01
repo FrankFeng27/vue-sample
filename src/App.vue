@@ -4,10 +4,7 @@ import { ref } from "vue";
 // @ts-ignore
 import styled, { ThemeProvider } from "vue3-styled-components";
 import { theme } from "./theme/theme"
-import HelloWorld from './components/HelloWorld.vue';
-// import LibraryTreeItem from "./components/LibraryTreeItem.vue";
-import TreeItem from "./components/tree-item.vue";
-import LibraryTree from "./components/LibraryTree.vue"
+import LibraryPanel from "./components/LibraryPanel.vue";
 
 const StyledContainer = styled.div`
   background-color: ${props => props.theme.theme.colors.libraryBack};
@@ -23,12 +20,7 @@ const defaultTab = ref(true);
 <template>
   <ThemeProvider :theme={theme}>
   <div class="container px-4 flex">
-    <StyledContainer class="grow-0">
-      <LibraryTree />
-    </StyledContainer>
-    <div class="grow">
-      <HelloWorld v-if="defaultTab" msg="Vite + Vue" />
-    </div>    
+    <LibraryPanel />
   </div>
 </ThemeProvider>
 </template>
