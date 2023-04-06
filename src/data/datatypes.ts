@@ -7,10 +7,10 @@ export interface LibraryItem {
   children?: Array<LibraryItem>;
 }
 
-export interface TreeItemData {
-  id?: number;
-  name: string;
-  children?: Array<TreeItemData>;
-  content?: string;
+export type TreeItemData = LibraryItem;
+
+export interface LibraryContent {
+  title: string;
+  content: string;
 }
 
